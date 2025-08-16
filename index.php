@@ -1,3 +1,12 @@
+<?php
+session_start();
+include_once 'includes/config.php';
+include_once 'includes/functions.php';
+
+// Get featured pets and products
+$featured_pets = getFeaturedPets();
+$featured_products = getFeaturedProducts();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,37 +19,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <i class="fas fa-paw text-primary"></i>
-                <span class="fw-bold">PetPal</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="shop.html">Shop</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="adoption.html">Adoption</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="articles.html">Articles</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/header.php'; ?>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -57,10 +36,10 @@
                             adorable pets waiting for their forever families.
                         </p>
                         <div class="hero-buttons">
-                            <a href="adoption.html" class="btn btn-primary btn-lg me-3">
+                            <a href="adoption.php" class="btn btn-primary btn-lg me-3">
                                 <i class="fas fa-heart me-2"></i>Adopt Now
                             </a>
-                            <a href="shop.html" class="btn btn-outline-primary btn-lg">
+                            <a href="shop.php" class="btn btn-outline-primary btn-lg">
                                 <i class="fas fa-shopping-cart me-2"></i>Shop Products
                             </a>
                         </div>
@@ -126,11 +105,37 @@
                     <p class="lead text-muted">Meet some of our adorable pets looking for loving homes</p>
                 </div>
             </div>
-            <div class="row g-4" id="featured-pets">
-                <!-- Pets will be loaded dynamically -->
+            <div class="row g-4">
+                <?php foreach ($featured_pets as $pet): ?>
+                <div class="col-lg-4 col-md-6">
+                    <div class="pet-card">
+                        <div class="pet-image">
+                            <img src="<?php echo htmlspecialchars($pet['image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($pet['name']); ?>" 
+                                 class="img-fluid">
+                            <div class="pet-badge"><?php echo htmlspecialchars($pet['age']); ?></div>
+                        </div>
+                        <div class="pet-info p-4">
+                            <h5 class="fw-bold mb-2"><?php echo htmlspecialchars($pet['name']); ?></h5>
+                            <p class="text-muted mb-3"><?php echo htmlspecialchars($pet['breed']); ?></p>
+                            <div class="pet-details mb-3">
+                                <span class="badge bg-light text-dark me-2">
+                                    <i class="fas fa-venus-mars me-1"></i><?php echo htmlspecialchars($pet['gender']); ?>
+                                </span>
+                                <span class="badge bg-light text-dark">
+                                    <i class="fas fa-weight me-1"></i><?php echo htmlspecialchars($pet['size']); ?>
+                                </span>
+                            </div>
+                            <a href="pet-details.php?id=<?php echo $pet['id']; ?>" class="btn btn-primary w-100">
+                                <i class="fas fa-heart me-2"></i>Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
             </div>
             <div class="text-center mt-5">
-                <a href="adoption.html" class="btn btn-primary btn-lg">
+                <a href="adoption.php" class="btn btn-primary btn-lg">
                     <i class="fas fa-paw me-2"></i>View All Pets
                 </a>
             </div>
@@ -146,11 +151,43 @@
                     <p class="lead text-muted">Everything your pet needs for a happy and healthy life</p>
                 </div>
             </div>
-            <div class="row g-4" id="featured-products">
-                <!-- Products will be loaded dynamically -->
+            <div class="row g-4">
+                <?php foreach ($featured_products as $product): ?>
+                <div class="col-lg-4 col-md-6">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="<?php echo htmlspecialchars($product['image']); ?>" 
+                                 alt="<?php echo htmlspecialchars($product['name']); ?>" 
+                                 class="img-fluid">
+                            <?php if ($product['discount'] > 0): ?>
+                            <div class="product-badge">-<?php echo $product['discount']; ?>%</div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="product-info p-4">
+                            <h5 class="fw-bold mb-2"><?php echo htmlspecialchars($product['name']); ?></h5>
+                            <p class="text-muted mb-3"><?php echo htmlspecialchars($product['category']); ?></p>
+                            <div class="product-rating mb-3">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <i class="fas fa-star <?php echo $i <= $product['rating'] ? 'text-warning' : 'text-muted'; ?>"></i>
+                                <?php endfor; ?>
+                                <span class="ms-2 text-muted">(<?php echo $product['reviews']; ?>)</span>
+                            </div>
+                            <div class="product-price mb-3">
+                                <?php if ($product['discount'] > 0): ?>
+                                    <span class="text-decoration-line-through text-muted me-2">$<?php echo number_format($product['original_price'], 2); ?></span>
+                                <?php endif; ?>
+                                <span class="fw-bold text-primary fs-5">$<?php echo number_format($product['price'], 2); ?></span>
+                            </div>
+                            <a href="product-details.php?id=<?php echo $product['id']; ?>" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-shopping-cart me-2"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
             </div>
             <div class="text-center mt-5">
-                <a href="shop.html" class="btn btn-outline-primary btn-lg">
+                <a href="shop.php" class="btn btn-outline-primary btn-lg">
                     <i class="fas fa-shopping-bag me-2"></i>Shop All Products
                 </a>
             </div>
@@ -166,8 +203,8 @@
                     <p class="mb-0">Get the latest news about new arrivals, pet care tips, and special offers.</p>
                 </div>
                 <div class="col-lg-6">
-                    <form class="newsletter-form d-flex gap-2">
-                        <input type="email" class="form-control" placeholder="Enter your email" required>
+                    <form class="newsletter-form d-flex gap-2" method="POST" action="includes/newsletter.php">
+                        <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
                         <button type="submit" class="btn btn-light">
                             <i class="fas fa-paper-plane"></i>
                         </button>
@@ -177,73 +214,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer bg-dark text-white py-5">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-4">
-                    <div class="footer-brand mb-4">
-                        <h4 class="fw-bold">
-                            <i class="fas fa-paw text-primary me-2"></i>PetPal
-                        </h4>
-                        <p class="text-muted">Your trusted partner in finding the perfect pet companion and providing the best care products.</p>
-                    </div>
-                    <div class="social-links">
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <h5 class="fw-bold mb-3">Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="index.html" class="text-muted">Home</a></li>
-                        <li><a href="shop.html" class="text-muted">Shop</a></li>
-                        <li><a href="adoption.html" class="text-muted">Adoption</a></li>
-                        <li><a href="articles.html" class="text-muted">Articles</a></li>
-                        <li><a href="contact.html" class="text-muted">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3">
-                    <h5 class="fw-bold mb-3">Services</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-muted">Pet Adoption</a></li>
-                        <li><a href="#" class="text-muted">Pet Products</a></li>
-                        <li><a href="#" class="text-muted">Pet Care Tips</a></li>
-                        <li><a href="#" class="text-muted">Consultation</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3">
-                    <h5 class="fw-bold mb-3">Contact Info</h5>
-                    <ul class="list-unstyled">
-                        <li class="text-muted mb-2">
-                            <i class="fas fa-map-marker-alt me-2"></i>
-                            123 Pet Street, City, State 12345
-                        </li>
-                        <li class="text-muted mb-2">
-                            <i class="fas fa-phone me-2"></i>
-                            (555) 123-4567
-                        </li>
-                        <li class="text-muted">
-                            <i class="fas fa-envelope me-2"></i>
-                            info@petpal.com
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="text-muted mb-0">&copy; 2024 PetPal Online. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <a href="#" class="text-muted me-3">Privacy Policy</a>
-                    <a href="#" class="text-muted">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php include 'includes/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/main.js"></script>
