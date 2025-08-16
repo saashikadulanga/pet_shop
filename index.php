@@ -3,6 +3,12 @@ session_start();
 include_once 'includes/config.php';
 include_once 'includes/functions.php';
 
+// Show login success message if redirected from login
+$message = '';
+if (isset($_GET['message'])) {
+    $message = sanitizeInput($_GET['message']);
+}
+
 // Get featured pets and products
 $featured_pets = getFeaturedPets();
 $featured_products = getFeaturedProducts();
@@ -20,6 +26,13 @@ $featured_products = getFeaturedProducts();
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
+
+    <?php if ($message): ?>
+        <div class="alert alert-success alert-dismissible fade show mt-5" role="alert" style="margin-top: 80px !important;">
+            <i class="fas fa-check-circle me-2"></i><?php echo htmlspecialchars($message); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
 
     <!-- Hero Section -->
     <section class="hero-section">

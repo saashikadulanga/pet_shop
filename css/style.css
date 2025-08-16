@@ -576,3 +576,93 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #4338ca;
 }
+
+/* Login/Register Styles */
+.login-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.login-form,
+.register-form {
+    background: white;
+}
+
+.input-group-text {
+    background: var(--light-color);
+    border-color: #e2e8f0;
+    color: var(--primary-color);
+}
+
+/* Profile Styles */
+.profile-sidebar .card {
+    border-radius: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.profile-avatar {
+    color: var(--primary-color);
+}
+
+.profile-menu .list-group-item {
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.profile-menu .list-group-item:hover {
+    background: var(--light-color);
+    transform: translateX(5px);
+}
+
+.profile-menu .list-group-item.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.profile-content .card {
+    border-radius: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.profile-content .card-header {
+    background: var(--light-color);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 15px 15px 0 0 !important;
+}
+
+/* Adoption Card Styles */
+.adoption-card .card {
+    border-radius: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.adoption-card .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Dropdown Menu Styles */
+.dropdown-menu {
+    border-radius: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 0.5rem 0;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background: var(--light-color);
+    color: var(--primary-color);
+}

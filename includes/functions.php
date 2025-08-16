@@ -1,4 +1,7 @@
 <?php
+// Include authentication functions
+include_once 'auth.php';
+
 // Sample data functions (replace with database queries in production)
 
 function getFeaturedPets() {
